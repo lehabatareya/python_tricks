@@ -1,5 +1,5 @@
 """
-Descriptors are classes to abstract the class instance attributes behavior.
+Descriptors are classes to abstract the class attributes behavior.
 This is the example descriptor from perfect presentation
 'Python: Encapsulation with Descriptors'
 by Luciano Ramalho
