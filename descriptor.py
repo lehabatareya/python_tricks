@@ -1,6 +1,6 @@
 """
 Descriptors are classes to abstract the class instance attributes behavior.
-This is the example descriptor from perfect presentation:
+This is the example descriptor from perfect presentation
 'Python: Encapsulation with Descriptors'
 by Luciano Ramalho
 """
@@ -8,25 +8,38 @@ by Luciano Ramalho
 
 class Quantity:
     """
-    Descriptor class for nonzero quantities
+    Descriptor class for nonnegative quantities
+    Raises ValueError if you try to assign negative value to the attribute
     """
+    __instance_counter = 0
+
     def __init__(self):
-        self.field_name = ''
+        self.field_name = '_' + self.__class__.__name__ + '_'
+        self.__class__.__instance_counter += 1
+        self.field_name += str(self.__instance_counter)
 
     def __set__(self, instance, value):
-        pass
+        """Sets only positive or 0 values. In case of negative value - error"""
+        if value >= 0:
+            setattr(instance, self.field_name, value)
+        else:
+            raise ValueError('Value must be > 0')
 
     def __get__(self, instance, owner):
-        pass
+        return getattr(instance, self.field_name)
 
 
-class ShopItem:
+class ShopItem(object):
     """
-    Simple class of shop item with given weight and given
+    Shop item with given quantity and given value
     """
-    def __init__(self, weight, value):
-        self.quantity = Quantity()
-        self.value = Quantity()
+    quantity = Quantity()
+    value = Quantity()
+
+    def __init__(self, description, quantity, value):
+        self.description = description
+        self.quantity = quantity
+        self.value = value
 
     def get_cost(self):
         """Get the total cost of the shop item"""
@@ -34,4 +47,6 @@ class ShopItem:
 
 
 if __name__ == '__main__':
-    carrot = ShopItem(10, 13)
+    carrot = ShopItem("Carrots", 10, 13)
+    print(f'Quantity = {carrot.quantity}, value = {carrot.value}')
+    print(f'Total cost = {carrot.get_cost()}')
